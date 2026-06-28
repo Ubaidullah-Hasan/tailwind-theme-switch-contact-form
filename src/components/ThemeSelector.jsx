@@ -1,5 +1,5 @@
 // src/components/ThemeSelector.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Palette, Check } from 'lucide-react';
 import { themes } from '../data/themes';
 
@@ -9,28 +9,22 @@ export default function ThemeSelector() {
     const saved = localStorage.getItem('theme');
     if (saved) {
       const found = themes.find(t => t.id === saved);
-      return found ? found.id : themes[0].id;
+      if (found) {
+        const root = document.documentElement;
+        root.style.setProperty('--primary-hsl', found.primary);
+        root.style.setProperty('--primary-hover-hsl', found.primaryHover);
+        root.style.setProperty('--primary-light-hsl', found.primaryLight);
+        return found.id;
+      }
     }
     return themes[0].id;
   });
 
-  const setDOMTheme = (theme) => {
+  const handleChange = (theme) => {
     const root = document.documentElement;
     root.style.setProperty('--primary-hsl', theme.primary);
     root.style.setProperty('--primary-hover-hsl', theme.primaryHover);
     root.style.setProperty('--primary-light-hsl', theme.primaryLight);
-  };
-
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) {
-      const found = themes.find(t => t.id === saved);
-      if (found) setDOMTheme(found);
-    }
-  }, []);
-
-  const handleChange = (theme) => {
-    setDOMTheme(theme);
     setActiveTheme(theme.id);
     localStorage.setItem('theme', theme.id);
     setOpen(false);

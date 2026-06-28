@@ -61,16 +61,14 @@
   --text-inverse: hsl(var(--text-inverse-hsl));
 }
 
-/* Light Mode Override */
-@media (prefers-color-scheme: light) {
-  :root:not(.dark) {
-    --surface-hsl: 0 0% 100%;
-    --surface-elevated-hsl: 0 0% 96%;
-    --border-hsl: 220 13% 85%;
-    --text-hsl: 220 13% 9%;
-    --text-muted-hsl: 220 9% 45%;
-    --text-inverse-hsl: 0 0% 100%;
-  }
+/* Light Mode Override (toggle via .light class on <html>) */
+:root.light {
+  --surface-hsl: 0 0% 100%;
+  --surface-elevated-hsl: 0 0% 96%;
+  --border-hsl: 220 13% 85%;
+  --text-hsl: 220 13% 9%;
+  --text-muted-hsl: 220 9% 45%;
+  --text-inverse-hsl: 0 0% 100%;
 }
 
 /* ==========================================

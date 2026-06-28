@@ -5,6 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import Card from "./components/Card";
 import ContactForm from "./components/ContactForm";
 import ThemeSelector from "./components/ThemeSelector";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 const contactInfo = [
   {
@@ -45,11 +46,14 @@ export default function App() {
                   H
                 </span>
               </div>
-              <span className="font-heading font-semibold text-xl text-text">
+              <span className="font-heading font-semibold text-xl text-text ">
                 Hasan
               </span>
             </div>
-            <ThemeSelector />
+            <div className="flex items-center gap-2">
+              <DarkModeToggle />
+              <ThemeSelector />
+            </div>
           </div>
         </div>
       </nav>
