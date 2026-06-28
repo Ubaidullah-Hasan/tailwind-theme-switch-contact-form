@@ -1,58 +1,67 @@
 /* src/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-/* 
-  ১. @theme directive: CSS variables → Tailwind utilities auto-generate
-  এখানে আমরা শুধু variable NAME দিই, Tailwind বাকিটা handel করে।
-  উদাহরণ: --color-primary → bg-primary, text-primary, border-primary, hover:bg-primary/80 ... সবUTO বানবে।
-*/
+/* ==========================================
+   1. THEME CONFIGURATION (@theme)
+   এখানে CSS Variable -> Tailwind Utility Mapping করা হয়েছে।
+   এখন আপনি text-primary, bg-surface, border-border লিখতে পারবেন।
+   ========================================== */
 @theme {
-  /* Base colors (semantic names) */
-  --color-primary: var(--primary-hsl);
-  --color-primary-hover: var(--primary-hover-hsl);
-  --color-primary-light: var(--primary-light-hsl);
-  
-  --color-surface: var(--surface-hsl);
-  --color-surface-elevated: var(--surface-elevated-hsl);
-  --color-border: var(--border-hsl);
-  
-  --color-text: var(--text-hsl);
-  --color-text-muted: var(--text-muted-hsl);
-  --color-text-inverse: var(--text-inverse-hsl);
-  
+  /* Brand Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+
+  /* Semantic UI Colors */
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+
   /* Fonts */
   --font-sans: "Inter", system-ui, sans-serif;
   --font-heading: "Poppins", system-ui, sans-serif;
-  
-  /* Spacing/Radius shortcuts */
+
+  /* Custom Radius (Optional but clean) */
   --radius-card: 1rem;
   --radius-input: 0.5rem;
 }
 
-/* 
-  ২. :root-এ default theme (Blue) define করা।
-  HSL format ব্যবহার করি যাতে opacity control (bg-primary/20) সহজ হয়।
-  Format: "hue saturation% lightness%"
-*/
+/* ==========================================
+   2. DEFAULT VALUES (CSS Variables)
+   HSL Format ব্যবহার করা হয়েছে যাতে opacity modifier (bg-primary/20) কাজ করে।
+   ========================================== */
 :root {
-  /* Default: Neon Blue */
+  /* Default: Neon Blue — raw HSL components (for JS theme switching) */
   --primary-hsl: 199 89% 48%;
   --primary-hover-hsl: 199 89% 42%;
   --primary-light-hsl: 199 89% 92%;
-  
+
   --surface-hsl: 220 13% 9%;
   --surface-elevated-hsl: 220 13% 12%;
   --border-hsl: 220 13% 20%;
-  
+
   --text-hsl: 220 9% 95%;
   --text-muted-hsl: 220 9% 65%;
   --text-inverse-hsl: 220 13% 9%;
+
+  /* Computed colors wrapping raw HSL in hsl() for valid CSS color values */
+  --primary: hsl(var(--primary-hsl));
+  --primary-hover: hsl(var(--primary-hover-hsl));
+  --primary-light: hsl(var(--primary-light-hsl));
+  --surface: hsl(var(--surface-hsl));
+  --surface-elevated: hsl(var(--surface-elevated-hsl));
+  --border: hsl(var(--border-hsl));
+  --text: hsl(var(--text-hsl));
+  --text-muted: hsl(var(--text-muted-hsl));
+  --text-inverse: hsl(var(--text-inverse-hsl));
 }
 
-/* 
-  ৩. Dark mode = default (আপনার portfolio dark mode)।
-  Light mode চাইলে .light class যোগ করুন।
-*/
+/* Light Mode Override */
 @media (prefers-color-scheme: light) {
   :root:not(.dark) {
     --surface-hsl: 0 0% 100%;
@@ -64,35 +73,41 @@
   }
 }
 
-/* ৪. Base styles */
+/* ==========================================
+   3. BASE STYLES & REUSABLE PATTERNS (@apply)
+   ========================================== */
 * { box-sizing: border-box; }
+
 body {
-  @apply font-sans bg-[hsl(var(--surface-hsl))] text-[hsl(var(--text-hsl))] 
-         transition-colors duration-300 ease-out;
+  @apply font-sans bg-surface text-text transition-colors duration-300 ease-out;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* ৫. Reusable utility patterns (optional but clean) */
+/* Reusable Component Patterns using @apply */
 .glass-card {
-  @apply bg-[hsl(var(--surface-elevated-hsl))/80] backdrop-blur-md
-         border border-[hsl(var(--border-hsl))] rounded-[var(--radius-card)]
-         shadow-xl shadow-black/20;
+  @apply bg-surface-elevated/80 backdrop-blur-md border border-border rounded-[var(--radius-card)] shadow-xl shadow-black/20;
 }
 
 .input-field {
   @apply w-full px-4 py-3 rounded-[var(--radius-input)]
-         bg-[hsl(var(--surface-hsl))] border border-[hsl(var(--border-hsl))]
-         text-[hsl(var(--text-hsl))] placeholder-[hsl(var(--text-muted-hsl))]
-         focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary-hsl))]
+         bg-surface border border-border
+         text-text placeholder-text-muted
+         focus:outline-none focus:ring-2 focus:ring-primary
          focus:border-transparent transition-all duration-200;
 }
 
 .btn-primary {
   @apply px-6 py-3 rounded-[var(--radius-input)]
-         bg-[hsl(var(--primary-hsl))] text-[hsl(var(--text-inverse-hsl))]
-         font-medium transition-all duration-200
-         hover:bg-[hsl(var(--primary-hover-hsl))]
+         bg-primary text-text-inverse font-medium
+         transition-all duration-200
+         hover:bg-primary-hover
          active:scale-[0.98] focus:outline-none focus:ring-2
-         focus:ring-[hsl(var(--primary-hsl))] focus:ring-offset-2
-         focus:ring-offset-[hsl(var(--surface-hsl))];
+         focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface;
 }
+
+/* Animation Helper */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 150ms ease-out; }

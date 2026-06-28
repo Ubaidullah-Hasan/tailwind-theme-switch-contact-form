@@ -1,10 +1,10 @@
 // src/components/ContactForm.jsx
 import { useState } from 'react';
-import { Send, Mail, User, MessageSquare, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, User, MessageSquare, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -21,28 +21,32 @@ export default function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     setStatus('loading');
-    
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 1500));
-    
-    // Success simulation
-    setStatus('success');
-    setFormData({ name: '', email: '', message: '' });
-    setTimeout(() => setStatus('idle'), 3000);
+    try {
+      await new Promise(r => setTimeout(r, 1500));
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setErrors({});
+      setTimeout(() => setStatus('idle'), 3000);
+    } catch {
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
   };
 
-  const inputClasses = "input-field"; // from index.css
-  const labelClasses = "block text-sm font-medium text-[hsl(var(--text-muted-hsl))] mb-1.5";
+  // Clean class names using @theme utilities
+  const inputClasses = "input-field"; // Defined in index.css @apply
+  const labelClasses = "block text-sm font-medium text-text-muted mb-1.5";
+  const errorInputClasses = "border-red-500 focus:ring-red-500"; // Red is built-in Tailwind color
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       <div>
         <label htmlFor="name" className={labelClasses}>Name</label>
         <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--text-muted-hsl))]" aria-hidden="true" />
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" aria-hidden="true" />
           <input
             id="name" type="text" autoComplete="name"
-            className={`${inputClasses} pl-10 ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`${inputClasses} pl-10 ${errors.name ? errorInputClasses : ''}`}
             value={formData.name}
             onChange={e => setFormData(d => ({...d, name: e.target.value}))}
             placeholder="Your name"
@@ -57,10 +61,10 @@ export default function ContactForm() {
       <div>
         <label htmlFor="email" className={labelClasses}>Email</label>
         <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[hsl(var(--text-muted-hsl))]" aria-hidden="true" />
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" aria-hidden="true" />
           <input
             id="email" type="email" autoComplete="email"
-            className={`${inputClasses} pl-10 ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`${inputClasses} pl-10 ${errors.email ? errorInputClasses : ''}`}
             value={formData.email}
             onChange={e => setFormData(d => ({...d, email: e.target.value}))}
             placeholder="you@example.com"
@@ -75,10 +79,10 @@ export default function ContactForm() {
       <div>
         <label htmlFor="message" className={labelClasses}>Message</label>
         <div className="relative">
-          <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-[hsl(var(--text-muted-hsl))]" aria-hidden="true" />
+          <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-text-muted" aria-hidden="true" />
           <textarea
             id="message" rows={5}
-            className={`${inputClasses} pl-10 resize-none ${errors.message ? 'border-red-500 focus:ring-red-500' : ''}`}
+            className={`${inputClasses} pl-10 resize-none ${errors.message ? errorInputClasses : ''}`}
             value={formData.message}
             onChange={e => setFormData(d => ({...d, message: e.target.value}))}
             placeholder="Your message..."
@@ -92,7 +96,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className="btn-primary w-full flex items-center justify-center gap-2"
+        className="btn-primary w-full flex items-center justify-center gap-2" // Uses @apply from index.css
         disabled={status === 'loading'}
       >
         {status === 'loading' && <Loader2 className="w-5 h-5 animate-spin" />}
